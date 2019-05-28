@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BestBestiary</string>
+    <string name="intro_screen">Intro Screen</string>
+    <string name="menu_screen">Menu Screen</string>
+    <string name="game_screen">New Screen</string>
+    <string name="load_screen">Load Screen</string>
+    <string name="help_screen">Help Screen</string>
+    <string name="settings_screen">Settings Screen</string>
+</resources>
