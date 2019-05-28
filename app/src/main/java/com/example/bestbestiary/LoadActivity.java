@@ -1,4 +1,12 @@
 package com.example.bestbestiary;
 
-public class LoadActivity {
+import android.os.Bundle;
+
+public class LoadActivity extends BaseActivity{
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_load);
+    }
 }

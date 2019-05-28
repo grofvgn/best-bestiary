@@ -1,9 +1,18 @@
 <resources>
+    <!--Imena aplikaciji in Activity-jev-->
     <string name="app_name">BestBestiary</string>
-    <string name="intro_screen">Intro Screen</string>
+    <string name="intro_prod">Prod. by Dmitry Leposha, 2019</string>
+    <string name="intro_name">Best Bestiary</string>
     <string name="menu_screen">Menu Screen</string>
     <string name="game_screen">New Screen</string>
     <string name="load_screen">Load Screen</string>
     <string name="help_screen">Help Screen</string>
     <string name="settings_screen">Settings Screen</string>
+
+    <!--Imena Button-ov v MenuActivity-->
+    <string name="new_menu">New Monster</string>
+    <string name="load_menu">Load Monster</string>
+    <string name="settings_menu">Settings</string>
+    <string name="help_menu">Help</string>
+    <string name="exit_menu">Exit</string>
 </resources>

@@ -4,15 +4,104 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IntroActivity">
+    android:background="@color/colorBlack"
+    tools:context=".MenuActivity">
+
 
     <TextView
+        android:id="@+id/txtMenuName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/intro_screen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/ghotic_font"
+        android:text="@string/intro_name"
+        android:textColor="@color/colorWhite"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnMenuNew"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
+    <Button
+        android:id="@+id/btnMenuNew"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_layout"
+        android:fontFamily="@font/ghotic_font"
+        android:text="@string/new_menu"
+        app:layout_constraintBottom_toTopOf="@+id/btnMenuLoad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtMenuName" />
+
+    <Button
+        android:id="@+id/btnMenuLoad"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_layout"
+        android:fontFamily="@font/ghotic_font"
+        android:text="@string/load_menu"
+        app:layout_constraintBottom_toTopOf="@+id/btnMenuSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMenuNew" />
+
+    <Button
+        android:id="@+id/btnMenuSettings"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_layout"
+        android:fontFamily="@font/ghotic_font"
+        android:text="@string/settings_menu"
+        app:layout_constraintBottom_toTopOf="@+id/btnMenuHelp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMenuLoad" />
+
+    <Button
+        android:id="@+id/btnMenuHelp"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_layout"
+        android:fontFamily="@font/ghotic_font"
+        android:text="@string/help_menu"
+        app:layout_constraintBottom_toTopOf="@+id/btnMenuExit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMenuSettings" />
+
+    <Button
+        android:id="@+id/btnMenuExit"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_layout"
+        android:fontFamily="@font/ghotic_font"
+        android:text="@string/exit_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMenuHelp" />
 </android.support.constraint.ConstraintLayout>
