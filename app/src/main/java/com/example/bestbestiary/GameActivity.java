@@ -3,10 +3,12 @@ package com.example.bestbestiary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
     Button btFootNext;
 
     List<Monster> monsters;
+    JsonParser parser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,10 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         btFootNext.setOnClickListener(this);
 
         monsters = new ArrayList<Monster>();
+        parser = new JsonParser();
+
+        monsters.add(new Monster("Kikimora", "kikimora_head", "kikimora_body", "kikimora_foot", true));
+        monsters.add(new Monster("Bes", "bes_head", "bes_body", "bes_foot", true));
     }
 
     @Override
@@ -85,8 +92,25 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
                 imgBody.setImageResource(imageId);
                 break;
             case R.id.btnFootBack:
+                try {
+                  String jsonTest = parser.serialize(monsters);
+                  parser.writeGson(jsonTest, this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.btnFootNext:
+                try {
+                    List<Monster> test = new ArrayList<Monster>();
+                    test = parser.deserialize(JsonParser.readGson(this));
+                    for (Monster m:
+                            test
+                         ) {
+                        System.out.println(m.getName());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

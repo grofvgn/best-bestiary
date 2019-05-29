@@ -4,6 +4,14 @@ public class Monster {
     private String name, headName, bodyName, footName;
     private boolean isOpened;
 
+    public Monster(String name, String headName, String bodyName, String footName, boolean isOpened) {
+        this.name = name;
+        this.headName = headName;
+        this.bodyName = bodyName;
+        this.footName = footName;
+        this.isOpened = isOpened;
+    }
+
     //------ GETTERS -------------------------------------------------------------------------
 
     public String getName() {
