@@ -9,17 +9,23 @@ import android.widget.Button;
 
 public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
+    Button btnNew;
+    Button btnLoad;
+    Button btnSettings;
+    Button btnHelp;
+    Button btnExit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
         // Inicializacija Button-ov
-        Button btnNew = (Button) findViewById(R.id.btnMenuNew);
-        Button btnLoad = (Button) findViewById(R.id.btnMenuLoad);
-        Button btnSettings = (Button) findViewById(R.id.btnMenuSettings);
-        Button btnHelp = (Button) findViewById(R.id.btnMenuHelp);
-        Button btnExit = (Button) findViewById(R.id.btnMenuExit);
+        btnNew = (Button) findViewById(R.id.btnMenuNew);
+        btnLoad = (Button) findViewById(R.id.btnMenuLoad);
+        btnSettings = (Button) findViewById(R.id.btnMenuSettings);
+        btnHelp = (Button) findViewById(R.id.btnMenuHelp);
+        btnExit = (Button) findViewById(R.id.btnMenuExit);
 
         // Nastavitev listener-a
         btnNew.setOnClickListener(this);
