@@ -23,6 +23,7 @@
         android:id="@+id/imgGameHead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
         android:contentDescription="TODO"
         android:src="@drawable/kikimora_head"
         app:layout_constraintBottom_toTopOf="@+id/imgGameBody"
@@ -37,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/kikimora_foot"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnGameInfo"
         app:layout_constraintEnd_toStartOf="@+id/btnFootNext"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnFootBack"
@@ -47,10 +48,12 @@
         android:id="@+id/btnHeadBack"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginTop="64dp"
         android:background="@drawable/button_back"
         app:layout_constraintBottom_toTopOf="@+id/btnBodyBack"
         app:layout_constraintEnd_toStartOf="@+id/imgGameHead"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread" />
@@ -59,6 +62,7 @@
         android:id="@+id/btnHeadNext"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginTop="64dp"
         android:background="@drawable/button_next"
         app:layout_constraintBottom_toTopOf="@+id/btnBodyNext"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,6 +101,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgGameFoot"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnBodyBack" />
 
@@ -113,23 +118,28 @@
 
     <Button
         android:id="@+id/btnToMenu"
+        android:fontFamily="@font/ghotic_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/button_game"
         android:text="Menu"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnGameInfo"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnGameInfo"
+        android:fontFamily="@font/ghotic_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/button_game"
         android:text="Info"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnGameSave"
         app:layout_constraintHorizontal_bias="0.5"
@@ -137,14 +147,35 @@
 
     <Button
         android:id="@+id/btnGameSave"
+        android:fontFamily="@font/ghotic_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/button_game"
         android:text="Save"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnGameInfo" />
+
+    <EditText
+        android:id="@+id/txtGameName"
+        android:textStyle="bold"
+        android:lines="1"
+        android:maxLength="20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button_layout"
+        android:gravity="center"
+        android:text="Kikimora"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

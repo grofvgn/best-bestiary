@@ -1,12 +1,20 @@
 package com.example.bestbestiary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +37,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
     Button btToMenu;
     Button btGameInfo;
     Button btGameSave;
+    EditText txtName;
 
     List<Monster> monsters;
     JsonParser parser;
@@ -55,7 +64,10 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         btToMenu = (Button) findViewById(R.id.btnToMenu);
         btGameInfo = (Button) findViewById(R.id.btnGameInfo);
         btGameSave = (Button) findViewById(R.id.btnGameSave);
+        txtName = (EditText) findViewById(R.id.txtGameName);
 
+        txtName.setEnabled(false);
+        txtName.setCursorVisible(false);
 
         btHeadBack.setOnClickListener(this);
         btHeadNext.setOnClickListener(this);
@@ -70,12 +82,13 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         parser = new JsonParser();
 
         try {
-            monsters = parser.deserialize(JsonParser.readGson(this));
+            monsters = parser.deserialize(JsonParser.readGson(this, "gson.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         counter = monsters.size();
+        checkMonsterName();
     }
 
     @Override
@@ -91,26 +104,109 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btnHeadBack:
                 changeImage(imgHead, ihd, false, 0);
+                checkMonsterName();
                 break;
             case R.id.btnHeadNext:
                 changeImage(imgHead, ihd, true, 0);
+                checkMonsterName();
                 break;
             case R.id.btnBodyBack:
                 changeImage(imgBody, ibd, false, 1);
+                checkMonsterName();
                 break;
             case R.id.btnBodyNext:
                 changeImage(imgBody, ibd, true, 1);
+                checkMonsterName();
                 break;
             case R.id.btnFootBack:
                 changeImage(imgFoot, ift, false, 2);
+                checkMonsterName();
                 break;
             case R.id.btnFootNext:
                 changeImage(imgFoot, ift, true, 2);
+                checkMonsterName();
                 break;
+            case R.id.btnToMenu:
+                backToMenu();
+                break;
+            case R.id.btnGameInfo:
+
+                break;
+            case R.id.btnGameSave:
+                saveUserMonster();
+                break;
+
         }
     }
 
-    public void changeImage(ImageView img, int i, boolean next, int  type) {
+    private void saveUserMonster() {
+        txtName.setEnabled(true);
+        txtName.setCursorVisible(true);
+        txtName.setText("");
+        if(txtName.requestFocus()) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(txtName, InputMethodManager.SHOW_IMPLICIT);
+        }
+        txtName.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String myName = txtName.getText().toString();
+
+                    List<Monster> myMonster = new ArrayList<Monster>();
+                    // poskusimo dostopati do datoteke z lastnimi Posastmi
+                    try {
+                        myMonster = parser.deserialize(JsonParser.readGson(GameActivity.this, "myGson.txt"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // dodamo svojo posast na seznam
+                    finally {
+                        Monster m = new Monster(myName, monsters.get(ihd).getHeadName(), monsters.get(ibd).getBodyName(), monsters.get(ift).getFootName(), true);
+                        myMonster.add(m);
+                    }
+
+
+                    try {
+                        String json = parser.serialize(myMonster);
+                        parser.writeGson(json, GameActivity.this, "myGson.txt");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (GameActivity.this.getCurrentFocus() != null) {
+                        InputMethodManager inputManager = (InputMethodManager) GameActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.hideSoftInputFromWindow(GameActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                    txtName.setEnabled(false);
+                    txtName.setCursorVisible(false);
+                    hideUI();
+                    return true;
+                }
+                return false;
+            }
+        }
+        );
+    }
+
+    private void checkMonsterName() {
+        if (ihd == ibd && ihd == ift) {
+            txtName.setText(monsters.get(ihd).getName());
+            btGameInfo.setTextColor(this.getResources().getColor(R.color.colorWhite));
+            btGameInfo.setEnabled(true);
+        }
+        else {
+            txtName.setText("??????");
+            btGameInfo.setTextColor(this.getResources().getColor(R.color.colorDarkRed));
+            btGameInfo.setEnabled(false);
+        }
+    }
+
+    private void backToMenu() {
+        Intent intent = new Intent(GameActivity.this, MenuActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void changeImage(ImageView img, int i, boolean next, int  type) {
         if (next) i++;
         else i--;
         if (i < 0) i = counter - 1;
@@ -134,7 +230,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         img.setImageResource(imageId);
     }
 
-    public void toGson(List<Monster> monsters) {
+    /*private void toGson(List<Monster> monsters) {
         try {
             String json = parser.serialize(monsters);
             parser.writeGson(json, this);
@@ -143,15 +239,15 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    public void fromGson() {
+    private void fromGson() {
         try {
             this.monsters = parser.deserialize(JsonParser.readGson(this));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    public static int getResourseId(Context context, String pVariableName, String pResourcename, String pPackageName) throws RuntimeException {
+    private static int getResourseId(Context context, String pVariableName, String pResourcename, String pPackageName) throws RuntimeException {
         try {
             return context.getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
         } catch (Exception e) {

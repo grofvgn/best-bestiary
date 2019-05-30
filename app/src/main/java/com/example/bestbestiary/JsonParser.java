@@ -46,11 +46,11 @@ public class JsonParser {
         return listMonster;
     }
 
-    public void writeGson(String json, Context ctx) throws IOException {
+    public void writeGson(String json, Context ctx, String path) throws IOException {
 
         FileOutputStream fos = null;
         try {
-            fos = ctx.openFileOutput("gson.txt", MODE_PRIVATE);
+            fos = ctx.openFileOutput(path, MODE_PRIVATE);
             fos.write(json.getBytes());
         }
         catch (FileNotFoundException e) {
@@ -65,12 +65,12 @@ public class JsonParser {
 
     }
 
-    public static String readGson(Context ctx) throws IOException {
+    public static String readGson(Context ctx, String path) throws IOException {
 
         FileInputStream fis = null;
         StringBuilder sb = new StringBuilder();
         try {
-            fis = ctx.openFileInput("gson.txt");
+            fis = ctx.openFileInput(path);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             String json;
