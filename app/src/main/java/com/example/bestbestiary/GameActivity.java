@@ -15,9 +15,6 @@ import java.util.List;
 public class GameActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String APP_PREFERENCES = "sp_settings";
-    public static final String APP_PREFERENCES_HEAD = "Head";
-    public static final String APP_PREFERENCES_BODY = "Body";
-    public static final String APP_PREFERENCES_FOOT = "Foot";
 
     SharedPreferences spSettings;
     ImageView imgHead;
@@ -29,9 +26,16 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
     Button btBodyNext;
     Button btFootBack;
     Button btFootNext;
+    Button btToMenu;
+    Button btGameInfo;
+    Button btGameSave;
 
     List<Monster> monsters;
     JsonParser parser;
+    int counter = 0;
+    int ihd = 0;
+    int ibd = 0;
+    int ift = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,10 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         btBodyNext = (Button) findViewById(R.id.btnBodyNext);
         btFootBack = (Button) findViewById(R.id.btnFootBack);
         btFootNext = (Button) findViewById(R.id.btnFootNext);
+        btToMenu = (Button) findViewById(R.id.btnToMenu);
+        btGameInfo = (Button) findViewById(R.id.btnGameInfo);
+        btGameSave = (Button) findViewById(R.id.btnGameSave);
+
 
         btHeadBack.setOnClickListener(this);
         btHeadNext.setOnClickListener(this);
@@ -55,12 +63,19 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         btBodyNext.setOnClickListener(this);
         btFootBack.setOnClickListener(this);
         btFootNext.setOnClickListener(this);
+        btToMenu.setOnClickListener(this);
+        btGameSave.setOnClickListener(this);
+        btGameInfo.setOnClickListener(this);
 
-        monsters = new ArrayList<Monster>();
         parser = new JsonParser();
 
-        monsters.add(new Monster("Kikimora", "kikimora_head", "kikimora_body", "kikimora_foot", true));
-        monsters.add(new Monster("Bes", "bes_head", "bes_body", "bes_foot", true));
+        try {
+            monsters = parser.deserialize(JsonParser.readGson(this));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        counter = monsters.size();
     }
 
     @Override
@@ -73,45 +88,66 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        int imageId;
         switch (v.getId()) {
             case R.id.btnHeadBack:
-                imageId = getResourseId(this, "bes_head", "drawable", getPackageName());
-                imgHead.setImageResource(imageId);
+                changeImage(imgHead, ihd, false, 0);
                 break;
             case R.id.btnHeadNext:
-                imageId = getResourseId(this, "kikimora_head", "drawable", getPackageName());
-                imgHead.setImageResource(imageId);
+                changeImage(imgHead, ihd, true, 0);
                 break;
             case R.id.btnBodyBack:
-                imageId = getResourseId(this, "bes_body", "drawable", getPackageName());
-                imgBody.setImageResource(imageId);
+                changeImage(imgBody, ibd, false, 1);
                 break;
             case R.id.btnBodyNext:
-                imageId = getResourseId(this, "kikimora_body", "drawable", getPackageName());
-                imgBody.setImageResource(imageId);
+                changeImage(imgBody, ibd, true, 1);
                 break;
             case R.id.btnFootBack:
-                try {
-                  String jsonTest = parser.serialize(monsters);
-                  parser.writeGson(jsonTest, this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                changeImage(imgFoot, ift, false, 2);
                 break;
             case R.id.btnFootNext:
-                try {
-                    List<Monster> test = new ArrayList<Monster>();
-                    test = parser.deserialize(JsonParser.readGson(this));
-                    for (Monster m:
-                            test
-                         ) {
-                        System.out.println(m.getName());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                changeImage(imgFoot, ift, true, 2);
                 break;
+        }
+    }
+
+    public void changeImage(ImageView img, int i, boolean next, int  type) {
+        if (next) i++;
+        else i--;
+        if (i < 0) i = counter - 1;
+        if (i > counter - 1) i = 0;
+        String name;
+
+        if (type == 0) {
+            ihd = i;
+            name = monsters.get(ihd).getHeadName();
+        }
+        else if (type == 1) {
+            ibd = i;
+            name = monsters.get(ibd).getBodyName();
+        }
+        else {
+            ift = i;
+            name = monsters.get(ift).getFootName();
+        }
+
+        int imageId = getResourseId(this, name, "drawable", getPackageName());
+        img.setImageResource(imageId);
+    }
+
+    public void toGson(List<Monster> monsters) {
+        try {
+            String json = parser.serialize(monsters);
+            parser.writeGson(json, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void fromGson() {
+        try {
+            this.monsters = parser.deserialize(JsonParser.readGson(this));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

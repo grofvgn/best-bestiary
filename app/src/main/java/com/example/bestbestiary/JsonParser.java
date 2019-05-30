@@ -47,6 +47,7 @@ public class JsonParser {
     }
 
     public void writeGson(String json, Context ctx) throws IOException {
+
         FileOutputStream fos = null;
         try {
             fos = ctx.openFileOutput("gson.txt", MODE_PRIVATE);
@@ -65,6 +66,7 @@ public class JsonParser {
     }
 
     public static String readGson(Context ctx) throws IOException {
+
         FileInputStream fis = null;
         StringBuilder sb = new StringBuilder();
         try {

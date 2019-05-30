@@ -11,13 +11,13 @@
         android:id="@+id/imgGameBody"
         android:layout_width="129dp"
         android:layout_height="112dp"
+        android:contentDescription="@string/new_menu"
         android:src="@drawable/kikimora_body"
         app:layout_constraintBottom_toTopOf="@+id/imgGameFoot"
         app:layout_constraintEnd_toStartOf="@+id/btnBodyNext"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnBodyBack"
-        app:layout_constraintTop_toBottomOf="@+id/imgGameHead"
-        android:contentDescription="@string/new_menu"/>
+        app:layout_constraintTop_toBottomOf="@+id/imgGameHead" />
 
     <ImageView
         android:id="@+id/imgGameHead"
@@ -45,9 +45,9 @@
 
     <Button
         android:id="@+id/btnHeadBack"
-        android:background="@drawable/button_back"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:background="@drawable/button_back"
         app:layout_constraintBottom_toTopOf="@+id/btnBodyBack"
         app:layout_constraintEnd_toStartOf="@+id/imgGameHead"
         app:layout_constraintHorizontal_bias="0.5"
@@ -57,9 +57,9 @@
 
     <Button
         android:id="@+id/btnHeadNext"
-        android:background="@drawable/button_next"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:background="@drawable/button_next"
         app:layout_constraintBottom_toTopOf="@+id/btnBodyNext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -69,9 +69,9 @@
 
     <Button
         android:id="@+id/btnBodyBack"
-        android:background="@drawable/button_back"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:background="@drawable/button_back"
         app:layout_constraintBottom_toTopOf="@+id/btnFootBack"
         app:layout_constraintEnd_toStartOf="@+id/imgGameBody"
         app:layout_constraintHorizontal_bias="0.5"
@@ -80,9 +80,9 @@
 
     <Button
         android:id="@+id/btnBodyNext"
-        android:background="@drawable/button_next"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:background="@drawable/button_next"
         app:layout_constraintBottom_toTopOf="@+id/btnFootNext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -91,9 +91,9 @@
 
     <Button
         android:id="@+id/btnFootBack"
-        android:background="@drawable/button_back"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:background="@drawable/button_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgGameFoot"
         app:layout_constraintHorizontal_bias="0.5"
@@ -102,12 +102,49 @@
 
     <Button
         android:id="@+id/btnFootNext"
-        android:background="@drawable/button_next"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:background="@drawable/button_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imgGameFoot"
         app:layout_constraintTop_toBottomOf="@+id/btnBodyNext" />
+
+    <Button
+        android:id="@+id/btnToMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_game"
+        android:text="Menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnGameInfo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnGameInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_game"
+        android:text="Info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnGameSave"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnToMenu" />
+
+    <Button
+        android:id="@+id/btnGameSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_game"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnGameInfo" />
+
 </android.support.constraint.ConstraintLayout>
