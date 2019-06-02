@@ -1,13 +1,9 @@
 package com.example.bestbestiary;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.os.Build;
+import android.content.Context;
 import android.view.View;
-import android.view.WindowManager;
 
 public class BaseActivity extends Activity {
-    public static final String GAME_PREFERENCES = "GamePrefs";
-
     public void hideUI() {
 
         View decorView = getWindow().getDecorView();
@@ -18,6 +14,14 @@ public class BaseActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    public static int getResourseId(Context context, String pVariableName, String pResourcename, String pPackageName) throws RuntimeException {
+        try {
+            return context.getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting Resource ID.", e);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.bestbestiary;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,15 +8,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,9 @@ import java.util.List;
 public class GameActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String APP_PREFERENCES = "sp_settings";
+    private static final String TAG = "GameActivity";
+    private static final int ERROR_REQUEST = 9001;
+    // API KEY: AIzaSyBqNiIEPAg1rWyQn6oxdP5YmErIjMGgK9o
 
     SharedPreferences spSettings;
     ImageView imgHead;
@@ -37,6 +43,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
     Button btToMenu;
     Button btGameInfo;
     Button btGameSave;
+    Button btMap;
     EditText txtName;
 
     List<Monster> monsters;
@@ -45,6 +52,11 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
     int ihd = 0;
     int ibd = 0;
     int ift = 0;
+
+    Intent intent;
+    String intHead;
+    String intBody;
+    String intFoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +76,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         btToMenu = (Button) findViewById(R.id.btnToMenu);
         btGameInfo = (Button) findViewById(R.id.btnGameInfo);
         btGameSave = (Button) findViewById(R.id.btnGameSave);
+        btMap = (Button) findViewById(R.id.btnGameHunt);
         txtName = (EditText) findViewById(R.id.txtGameName);
 
         txtName.setEnabled(false);
@@ -78,17 +91,17 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         btToMenu.setOnClickListener(this);
         btGameSave.setOnClickListener(this);
         btGameInfo.setOnClickListener(this);
+        btMap.setOnClickListener(this);
+
 
         parser = new JsonParser();
+        intent = getIntent(); // dobimo podatki iz LoadActivity
+        intHead = intent.getStringExtra("head");
+        intBody = intent.getStringExtra("body");
+        intFoot = intent.getStringExtra("foot");
 
-        try {
-            monsters = parser.deserialize(JsonParser.readGson(this, "gson.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        counter = monsters.size();
-        checkMonsterName();
+        initData();
+        setLoaded();
     }
 
     @Override
@@ -130,13 +143,105 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
                 backToMenu();
                 break;
             case R.id.btnGameInfo:
-
+                toInfo();
                 break;
             case R.id.btnGameSave:
                 saveUserMonster();
                 break;
+            case R.id.btnGameHunt:
+                if(isServiceWork()) {
+                    initMap();
+                }
+                break;
 
         }
+    }
+
+    private void initMap() {
+        Intent intent = new Intent(GameActivity.this, SeekerActivity.class);
+        startActivity(intent);
+    }
+
+    public void initData() {
+        try { // ce obstaja datoteka gson.txt, potem nalozimo podatki, drugace inicializiramo zacetni podatki
+            if(fileExist("gson.txt")) monsters = parser.deserialize(JsonParser.readGson(this, "gson.txt"));
+            else {
+                monsters = new ArrayList<Monster>();
+                // TODO : zanka za dodajanje
+                monsters.add(new Monster("Kikimora", "kikimora_head", "kikimora_body", "kikimora_foot", true,
+                        getResourseId(GameActivity.this, "kikimora_head", "drawable", getPackageName()), "Kikimora is a legendary creature, a female house spirit in Slavic mythology. Her role in the house is usually juxtaposed with that of the domovoy, whereas one of them is considered a bad spirit, and the other, a \"good\" one. When the kikimora inhabits a house, she lives behind the stove or in the cellar, and usually produces noises similar to those made by the mice in order to obtain food. Kikimory (in plural) were the first traditional explanation for sleep paralysis in Russian folklore.\n" +
+                        "\n" +
+                        "The word kikimora may have derived from Udmurt (Finn-Ugric) word kikka-murt, meaning scarecrow (literally bag-made person), although other etymological hypotheses also exist. The OED links mora with the mare of nightmare; moreover, inconclusive linguistic evidence suggests that the French word cauchemar might have also derived from the same root.",
+                        new LatLng(46.559090, 15.638078)));
+
+                monsters.add(new Monster("Bes", "bes_head", "bes_body", "bes_foot", true,
+                        getResourseId(GameActivity.this, "bes_head", "drawable", getPackageName()),"Bes is an evil spirit or demon in Slavic mythology. The word is synonymous with chort.\n" +
+                        "\n" +
+                        "After the acceptance of Christianity the bies became identified with the devil, corresponding to the being referred to in Ancient Greek, as either daimon (δαίμων), daimónion or pneuma (πνεῦμα). For example, biesy (Russian plural of bies) is used in the standard Russian translation of Mark 5:12, where we have the devils entering the swine in KJV. Compare to the Ukrainian bisy (used always in plural) or bisytysia (to go mad). In Slovenian (bes), Croatian (bijes) and Serbian (bes) the word means \"rage\", \"fury\".",
+                        new LatLng(46.559090, 15.638078)));
+                try { // po inicializaciji shranimo v gson.txt
+                    parser.writeGson(parser.serialize(monsters), GameActivity.this, "gson.txt");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLoaded() {
+        if (intent.hasExtra("loaded")) {// ce imamo podatki iz Load, potem nastavimo slike
+            imgHead.setImageResource(getResourseId(this, intent.getStringExtra("head"), "drawable",
+                    getPackageName()));
+            imgBody.setImageResource(getResourseId(this, intent.getStringExtra("body"), "drawable",
+                    getPackageName()));
+            imgFoot.setImageResource(getResourseId(this, intent.getStringExtra("foot"), "drawable",
+                    getPackageName()));
+            txtName.setText(intent.getStringExtra("name"));
+            // v zanki nastavimo stevce za posamezno sliko
+            for (Monster m:
+                    monsters
+            ) {
+                if (intHead.equals(m.getHeadName())){
+                    ihd = monsters.indexOf(m);
+                }
+                if ((intBody.equals(m.getBodyName()))) {
+                    ibd = monsters.indexOf(m);
+                }
+                if (intFoot.equals(m.getFootName())) {
+                    ift = monsters.indexOf(m);
+                }
+            }
+        }
+        else checkMonsterName(); // ce ne nalagamo monstra, nastavimo njegovo ime glede na indeks
+        counter = monsters.size(); // nastavimo stevec velikosti seznama monster
+    }
+
+    public boolean fileExist(String path) {
+        File file = getBaseContext().getFileStreamPath(path);
+        return file.exists();
+    }
+
+    public boolean isServiceWork() {
+        Log.d(TAG, "Checking version...");
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(GameActivity.this);
+        if (available == ConnectionResult.SUCCESS) {
+            // OK user can make request
+            Log.d(TAG, "Everything is working!");
+            return true;
+        }
+        else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            // an error we can resolve
+            Log.d(TAG, "Something wrong, but we can resolve this...");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(GameActivity.this, available, ERROR_REQUEST);
+            dialog.show();
+        }
+        else {
+            Toast.makeText(this, "You can't make map request...", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     private void saveUserMonster() {
@@ -155,16 +260,13 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
                     List<Monster> myMonster = new ArrayList<Monster>();
                     // poskusimo dostopati do datoteke z lastnimi Posastmi
                     try {
-                        myMonster = parser.deserialize(JsonParser.readGson(GameActivity.this, "myGson.txt"));
+                       if (fileExist("myGson.txt")) myMonster = parser.deserialize(JsonParser.readGson(GameActivity.this, "myGson.txt"));
+                        Monster m = new Monster(myName, monsters.get(ihd).getHeadName(), monsters.get(ibd).getBodyName(), monsters.get(ift).getFootName(), true,
+                                getResourseId(GameActivity.this, monsters.get(ihd).getHeadName(), "drawable", getPackageName()), "", null);
+                        myMonster.add(m);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    // dodamo svojo posast na seznam
-                    finally {
-                        Monster m = new Monster(myName, monsters.get(ihd).getHeadName(), monsters.get(ibd).getBodyName(), monsters.get(ift).getFootName(), true);
-                        myMonster.add(m);
-                    }
-
 
                     try {
                         String json = parser.serialize(myMonster);
@@ -202,6 +304,22 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
 
     private void backToMenu() {
         Intent intent = new Intent(GameActivity.this, MenuActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toInfo() {
+        Monster monster = null;
+        for (Monster m:
+             monsters) {
+            if (m.getName().equals(txtName.getText().toString())) {
+                monster = m;
+                break;
+            }
+        }
+        Intent intent = new Intent(GameActivity.this, InfoActivity.class);
+        intent.putExtra("infoName", txtName.getText().toString());
+        intent.putExtra("infoDescription", monster.getDescription().toString());
         startActivity(intent);
         finish();
     }
@@ -247,11 +365,5 @@ public class GameActivity extends BaseActivity implements View.OnClickListener {
         }
     }*/
 
-    private static int getResourseId(Context context, String pVariableName, String pResourcename, String pPackageName) throws RuntimeException {
-        try {
-            return context.getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
-        } catch (Exception e) {
-            throw new RuntimeException("Error getting Resource ID.", e);
-        }
-    }
+
 }

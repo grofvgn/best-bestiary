@@ -15,4 +15,10 @@
     <string name="settings_menu">Settings</string>
     <string name="help_menu">Help</string>
     <string name="exit_menu">Exit</string>
+
+    <string name="welcome_login">Welcome anytime</string>
+    <string name="user_login">Username</string>
+    <string name="pass_login">Password</string>
+
+    <string name="api_key_maps">AIzaSyBqNiIEPAg1rWyQn6oxdP5YmErIjMGgK9o</string>
 </resources>
